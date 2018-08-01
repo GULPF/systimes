@@ -1,4 +1,4 @@
-import times
+import times, math
 
 type
     SysTime* = object
@@ -91,21 +91,32 @@ proc local*(stime: SysTime): SysTime =
 proc utc*(stime: SysTime): SysTime =
     SysTime(time: stime.time, timezone: utc())
 
-proc year*(stime: SysTime): int                   = toDateTime(stime).year
-proc month*(stime: SysTime): Month                = toDateTime(stime).month
-proc monthday*(stime: SysTime): MonthdayRange     = toDateTime(stime).monthday
-proc hour*(stime: SysTime): HourRange             = toDateTime(stime).hour
-proc minute*(stime: SysTime): MinuteRange         = toDateTime(stime).minute
-proc second*(stime: SysTime): SecondRange         = toDateTime(stime).second
-proc nanosecond*(stime: SysTime): NanosecondRange = toDateTime(stime).nanosecond
-proc yearday*(stime: SysTime): YeardayRange       = toDateTime(stime).yearday
-proc weekday*(stime: SysTime): Weekday            = toDateTime(stime).weekday
-
 proc isDst*(stime: SysTime): bool =
     stime.timezone.zoneInfoFromUtc(stime.time).isDst
 
 proc utcOffset*(stime: Systime): int =
     stime.timezone.zoneInfoFromUtc(stime.time).utcOffset
+
+proc year*(stime: SysTime): int                   = toDateTime(stime).year
+proc month*(stime: SysTime): Month                = toDateTime(stime).month
+proc monthday*(stime: SysTime): MonthdayRange     = toDateTime(stime).monthday
+
+proc hour*(stime: SysTime): HourRange =
+    toDateTime(stime).hour
+
+proc minute*(stime: SysTime): MinuteRange =
+    floorMod(toUnix(stime.time) + stime.utcOffset, 60 * 60) div 60
+
+proc second*(stime: SysTime): SecondRange =
+    floorMod(toUnix(stime.time) + stime.utcOffset, 60)
+
+proc nanosecond*(stime: SysTime): NanosecondRange =
+    # Since UTC offsets is only whole seconds,
+    # we can return the nanosecond directly.
+    stime.time.nanosecond
+
+proc yearday*(stime: SysTime): YeardayRange       = toDateTime(stime).yearday
+proc weekday*(stime: SysTime): Weekday            = toDateTime(stime).weekday
 
 proc `<`*(a, b: SysTime): bool =
     a.time < b.time
@@ -127,17 +138,22 @@ proc `-`*(stime: SysTime, dur: Duration): SysTime =
 
 proc `+`*(stime: SysTime, interval: TimeInterval): SysTime =
     if isStaticInterval(interval):
-        SysTime(time: stime.time + evaluateStaticInterval(interval))
+        SysTime(time: stime.time + evaluateStaticInterval(interval),
+            timezone: stime.timezone)
     else:
         # Expensive!
         toSysTime(toDateTime(stime) + interval)
 
 proc `-`*(stime: SysTime, interval: TimeInterval): SysTime =
     if isStaticInterval(interval):
-        SysTime(time: stime.time - evaluateStaticInterval(interval))
+        SysTime(time: stime.time - evaluateStaticInterval(interval),
+            timezone: stime.timezone)
     else:
         # Expensive!
         toSysTime(toDateTime(stime) - interval)
+
+proc between*(low, high: SysTime): TimeInterval =
+    between(toDateTime(low), toDateTime(high))
 
 proc parseSysTime*(input, f: string, zone: Timezone): SysTime =
     SysTime(time: parseTime(input, f, zone), timezone: zone)

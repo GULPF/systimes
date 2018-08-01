@@ -20,9 +20,9 @@ Some things to keep in mind:
 - Some procs are slower for ``SysTime``. Notably all procs involving ``TimeInterval``. 
 - ``SysTime`` is much more space effecient.
 
-``systimes`` is implemented as a complement to the ``times`` module, not a replacement. It's compatible with
-types like ``Duration`` and ``TimeInterval`` from the ``times`` module, and offers a very similiar API as
-the ``DateTime`` type.
+``systimes`` is implemented as a complement to the ``times`` module, not a replacement. In typical usage both
+``times`` and ``systimes`` must be imported. It's compatible with types like ``Duration`` and ``TimeInterval``
+from the ``times`` module, and offers a very similiar API as the ``DateTime`` type.
 
 The name comes from the ``SysTime`` class from Phobos, which uses a similiar representation for ``timestamp`` + ``timezone``.
 
@@ -38,7 +38,7 @@ echo y # 2000-01-01T12:00:00Z
 Compatibility with the times module
 -----------------------
 ``systimes`` exposes a very similiar API for ``SysTime`` as the ``times`` module does for ``DateTime``.
-Notable differences are listed in the table below. Note that the ``systimes`` module doesn't cause any conflict or ambiguities with the ``times`` modules, so importing both from the same module is a good idea.
+Notable differences are listed in the table below.
 
 | DateTime                 | SysTime                         |
 |--------------------------|---------------------------------|
