@@ -49,7 +49,7 @@ proc evaluateStaticInterval(interval: TimeInterval): Duration =
     hours = interval.hours)
 
 # Copied from times.nim (but with different signature)
-proc getDayOfWeek*(unixTime: int64): WeekDay =
+proc getDayOfWeek(unixTime: int64): WeekDay =
     # 1970-01-01 is a Thursday, we adjust to the previous Monday
     let day = floorDiv(unixTime, convert(Days, Seconds, 1)) - 3
     let weeks = floorDiv(day, 7)
@@ -87,9 +87,9 @@ proc inZone*(stime: SysTime, zone: Timezone): SysTime =
     SysTime(time: stime.time, timezone: zone)
 
 proc toTime*(stime: SysTime): Time =
-    ## Convert ``SysTime`` to ``Time.
+    ## Convert ``SysTime`` to ``Time``.
     ##
-    ## Note that unlike ``DateTime``, ``stime`` is represented
+    ## Note that unlike ``DateTime``, ``SysTime`` is represented
     ## internally as a ``Time`` so this proc is just a field access.
     stime.time
 
