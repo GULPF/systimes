@@ -1,11 +1,13 @@
 import times, math
 
 type
-    SysTime* = object
+    SysTime* = object ## Represents a point-in-time with
+                      ## an attached timezone.
         time: Time
         timezone: Timezone
 
-proc timezone*(stime: SysTime): Timezone = stime.timezone
+proc timezone*(stime: SysTime): Timezone =
+    stime.timezone
 
 # Copied from times.nim
 proc toEpochDay(monthday: MonthdayRange, month: Month, year: int): int64 =
@@ -46,8 +48,15 @@ proc evaluateStaticInterval(interval: TimeInterval): Duration =
     minutes = interval.minutes,
     hours = interval.hours)
 
-proc inZone*(stime: SysTime, zone: Timezone): SysTime =
-    SysTime(time: stime.time, timezone: zone)
+# Copied from times.nim (but with different signature)
+proc getDayOfWeek*(unixTime: int64): WeekDay =
+    # 1970-01-01 is a Thursday, we adjust to the previous Monday
+    let day = floorDiv(unixTime, convert(Days, Seconds, 1)) - 3
+    let weeks = floorDiv(day, 7)
+    let wd = day - weeks * 7
+    # The value of d is 0 for a Sunday, 1 for a Monday, 2 for a Tuesday, etc.
+    # so we must correct for the WeekDay type.
+    result = if wd == 0: dSun else: WeekDay(wd - 1)
 
 proc initSysTime*(time: Time, zone: Timezone): SysTime =
     SysTime(time: time, timezone: zone)
@@ -73,33 +82,49 @@ proc initSysTime*(monthday: MonthdayRange, month: Month, year: int,
         zone = local()): SysTime =
     initSysTime(monthday, month, year, hour, minute, second, 0, zone)
 
+proc inZone*(stime: SysTime, zone: Timezone): SysTime =
+    ## Swap timezone to ``zone``.
+    SysTime(time: stime.time, timezone: zone)
+
 proc toTime*(stime: SysTime): Time =
+    ## Convert ``SysTime`` to ``Time.
+    ##
+    ## Note that unlike ``DateTime``, ``stime`` is represented
+    ## internally as a ``Time`` so this proc is just a field access.
     stime.time
 
 proc toDateTime*(stime: SysTime): DateTime =
+    ## Convert ``SysTime`` to ``DateTime``.
     stime.time.inZone(stime.timezone)
 
 proc toSysTime*(dt: DateTime): SysTime =
+    ## Convert ``DateTime`` to ``SysTime``.
     SysTime(time: toTime(dt), timezone: dt.timezone)
 
 proc sysnow*(): SysTime =
+    ## Get the current time as a ``SysTime``.
     SysTime(time: getTime(), timezone: local())
 
 proc local*(stime: SysTime): SysTime =
+    ## Shorthand for ``stime.inZone(local())``
     SysTime(time: stime.time, timezone: local())
 
 proc utc*(stime: SysTime): SysTime =
+    ## Shorthand for ``stime.inZone(utc())``
     SysTime(time: stime.time, timezone: utc())
 
 proc isDst*(stime: SysTime): bool =
+    ## Returns true if ``stime`` observes DST, and false if not.
     stime.timezone.zoneInfoFromUtc(stime.time).isDst
 
 proc utcOffset*(stime: Systime): int =
+    ## Returns the timezone offset in seconds west of UTC.
     stime.timezone.zoneInfoFromUtc(stime.time).utcOffset
 
-proc year*(stime: SysTime): int                   = toDateTime(stime).year
-proc month*(stime: SysTime): Month                = toDateTime(stime).month
-proc monthday*(stime: SysTime): MonthdayRange     = toDateTime(stime).monthday
+# TODO: Optimize
+proc year*(stime: SysTime): int               = toDateTime(stime).year
+proc month*(stime: SysTime): Month            = toDateTime(stime).month
+proc monthday*(stime: SysTime): MonthdayRange = toDateTime(stime).monthday
 
 proc hour*(stime: SysTime): HourRange =
     toDateTime(stime).hour
@@ -115,8 +140,12 @@ proc nanosecond*(stime: SysTime): NanosecondRange =
     # we can return the nanosecond directly.
     stime.time.nanosecond
 
-proc yearday*(stime: SysTime): YeardayRange       = toDateTime(stime).yearday
-proc weekday*(stime: SysTime): Weekday            = toDateTime(stime).weekday
+proc yearday*(stime: SysTime): YeardayRange =
+    # TODO: optimize
+    toDateTime(stime).yearday
+
+proc weekday*(stime: SysTime): Weekday =
+    getDayOfWeek(toUnix(stime.time) + stime.utcOffset)
 
 proc `<`*(a, b: SysTime): bool =
     a.time < b.time
@@ -171,4 +200,6 @@ proc format*(stime: SysTime, f: static[string]): string =
     toDateTime(stime).format(f)
 
 proc `$`*(stime: SysTime): string =
+    ## Stringification of a ``SysTime``.
+    ## Uses the same format as ``DateTime``.
     $toDateTime(stime)
