@@ -7,6 +7,7 @@ type
         timezone: Timezone
 
 proc timezone*(stime: SysTime): Timezone =
+    ## Returns the attached timezone.
     stime.timezone
 
 # Copied from times.nim
@@ -73,9 +74,8 @@ proc initSysTime*(monthday: MonthdayRange, month: Month, year: int,
         second: second,
         nanosecond: nanosecond
     )
-    let zoneInfo = zone.zoneInfoFromTz(dt.toAdjTime)
-    let time = zoneInfo.adjTime + initDuration(seconds = zoneInfo.utcOffset)
-    result = SysTime(time: time, timezone: zone)
+    let zt = zone.zonedTimeFromAdjTime(dt.toAdjTime)
+    result = SysTime(time: zt.time, timezone: zone)
 
 proc initSysTime*(monthday: MonthdayRange, month: Month, year: int,
         hour: HourRange, minute: MinuteRange, second: SecondRange,
@@ -115,11 +115,11 @@ proc utc*(stime: SysTime): SysTime =
 
 proc isDst*(stime: SysTime): bool =
     ## Returns true if ``stime`` observes DST, and false if not.
-    stime.timezone.zoneInfoFromUtc(stime.time).isDst
+    stime.timezone.zonedTimeFromTime(stime.time).isDst
 
 proc utcOffset*(stime: Systime): int =
     ## Returns the timezone offset in seconds west of UTC.
-    stime.timezone.zoneInfoFromUtc(stime.time).utcOffset
+    stime.timezone.zonedTimeFromTime(stime.time).utcOffset
 
 # TODO: Optimize
 proc year*(stime: SysTime): int               = toDateTime(stime).year
@@ -127,24 +127,34 @@ proc month*(stime: SysTime): Month            = toDateTime(stime).month
 proc monthday*(stime: SysTime): MonthdayRange = toDateTime(stime).monthday
 
 proc hour*(stime: SysTime): HourRange =
+    ## Returns the hour of the day in the range ``0 .. 23``.
     toDateTime(stime).hour
 
 proc minute*(stime: SysTime): MinuteRange =
+    ## Returns the minute of the hour in the range ``0 .. 59``
     floorMod(toUnix(stime.time) + stime.utcOffset, 60 * 60) div 60
 
 proc second*(stime: SysTime): SecondRange =
+    ## Returns the second of the minute in the range ``0 .. 59``.
+    ##
+    ## Note that the ``SecondRange`` type allows the range ``0 .. 60``
+    ## because of leap seconds, but a leap second will never be returned
+    ## by this proc.
     floorMod(toUnix(stime.time) + stime.utcOffset, 60)
 
 proc nanosecond*(stime: SysTime): NanosecondRange =
+    ## Returns the nanosecond of the second in the range ``0 .. 999_999_999``.
     # Since UTC offsets is only whole seconds,
     # we can return the nanosecond directly.
     stime.time.nanosecond
 
 proc yearday*(stime: SysTime): YeardayRange =
+    ## Returns the day of the year in the range ``0 .. 365``.
     # TODO: optimize
     toDateTime(stime).yearday
 
 proc weekday*(stime: SysTime): Weekday =
+    ## Returns the day of the week as an enum.
     getDayOfWeek(toUnix(stime.time) + stime.utcOffset)
 
 proc `<`*(a, b: SysTime): bool =
@@ -154,6 +164,13 @@ proc `<=`*(a, b: SysTime): bool =
     a.time <= b.time
 
 proc `==`*(a, b: SysTime): bool =
+    ## Returns true if ``a`` and ``b`` represent the same point in time.
+    ## Note that the timezone doesn't need to match!
+    runnableExamples:
+        let a = sysnow()
+        let b = a.inZone(utc())
+        doAssert a == a
+        doAssert a == b
     a.time == b.time
 
 proc `-`*(a, b: SysTime): Duration =
