@@ -1,4 +1,4 @@
-import times, math
+import std / [times, math]
 
 type
     SysTime* = object ## Represents a point-in-time with

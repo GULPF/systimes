@@ -1,4 +1,5 @@
-import systimes, times, unittest
+import std / [times, unittest]
+import systimes
 
 test "utc":
     let stime = initSysTime(05, mJan, 2000, 01, 02, 03, 04, utc())
