@@ -1,5 +1,3 @@
-NOTE: This module is still in an early stage
-
 systimes
 ===========================
 
@@ -32,7 +30,7 @@ echo y # 2000-01-01T12:00:00Z
 ```
 - - -
 
-``systimes`` exposes a very similiar API for ``SysTime`` as the ``times`` module does for ``DateTime``. Notable differences are listed in the table below.
+``systimes`` exposes a very similiar API for ``SysTime`` as the ``times`` module does for ``DateTime``. Notable differences are listed in the table below. [Generated docs are available here](https://gulpf.github.io/systimes/systimes.html).
 
 | DateTime                 | SysTime                         |
 |--------------------------|---------------------------------|
