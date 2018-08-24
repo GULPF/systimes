@@ -1367,7 +1367,7 @@ Represents a point-in-time with an attached timezone.
 <dl class="item">
 <dt id="timezone"><a name="timezone,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">timezone</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Timezone</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the attached timezone.
 
 </dd>
 <dt id="initSysTime"><a name="initSysTime,Time,Timezone"></a><pre><span class="Keyword">proc</span> <span class="Identifier">initSysTime</span><span class="Other">(</span><span class="Identifier">time</span><span class="Other">:</span> <span class="Identifier">Time</span><span class="Other">;</span> <span class="Identifier">zone</span><span class="Other">:</span> <span class="Identifier">Timezone</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">SysTime</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1398,18 +1398,18 @@ Swap timezone to <tt class="docutils literal"><span class="pre">zone</span></tt>
 <dt id="toTime"><a name="toTime,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">toTime</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Time</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 <p>Convert <tt class="docutils literal"><span class="pre">SysTime</span></tt> to <tt class="docutils literal"><span class="pre">Time</span></tt>.</p>
-<p>Note that unlike <tt class="docutils literal"><span class="pre">DateTime</span></tt>, <tt class="docutils literal"><span class="pre">SysTime</span></tt> is represented internally as a <tt class="docutils literal"><span class="pre">Time</span></tt> so this proc is just a field access.</p>
+<p>Note that unlike <tt class="docutils literal"><span class="pre">times.DateTime</span></tt>, <tt class="docutils literal"><span class="pre">SysTime</span></tt> is represented internally as a <tt class="docutils literal"><span class="pre">Time</span></tt> so this proc is just a field access.</p>
 
 
 </dd>
 <dt id="toDateTime"><a name="toDateTime,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">toDateTime</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">DateTime</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-Convert <tt class="docutils literal"><span class="pre">SysTime</span></tt> to <tt class="docutils literal"><span class="pre">DateTime</span></tt>.
+Convert a <tt class="docutils literal"><span class="pre">SysTime</span></tt> to a <tt class="docutils literal"><span class="pre">times.DateTime</span></tt>.
 
 </dd>
 <dt id="toSysTime"><a name="toSysTime,DateTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">toSysTime</span><span class="Other">(</span><span class="Identifier">dt</span><span class="Other">:</span> <span class="Identifier">DateTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">SysTime</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-Convert <tt class="docutils literal"><span class="pre">DateTime</span></tt> to <tt class="docutils literal"><span class="pre">SysTime</span></tt>.
+Convert a <tt class="docutils literal"><span class="pre">times.DateTime</span></tt> to a <tt class="docutils literal"><span class="pre">SysTime</span></tt>.
 
 </dd>
 <dt id="sysnow"><a name="sysnow,"></a><pre><span class="Keyword">proc</span> <span class="Identifier">sysnow</span><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">SysTime</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1454,32 +1454,34 @@ Returns the timezone offset in seconds west of UTC.
 </dd>
 <dt id="hour"><a name="hour,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">hour</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">HourRange</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the hour of the day in the range <tt class="docutils literal"><span class="pre">0 .. 23</span></tt>.
 
 </dd>
 <dt id="minute"><a name="minute,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">minute</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">MinuteRange</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the minute of the hour in the range <tt class="docutils literal"><span class="pre">0 .. 59</span></tt>
 
 </dd>
 <dt id="second"><a name="second,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">second</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">SecondRange</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+<p>Returns the second of the minute in the range <tt class="docutils literal"><span class="pre">0 .. 59</span></tt>.</p>
+<p>Note that the <tt class="docutils literal"><span class="pre">SecondRange</span></tt> type allows the range <tt class="docutils literal"><span class="pre">0 .. 60</span></tt> because of leap seconds, but a leap second will never be returned by this proc.</p>
 
 
 </dd>
 <dt id="nanosecond"><a name="nanosecond,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">nanosecond</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">NanosecondRange</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the nanosecond of the second in the range <tt class="docutils literal"><span class="pre">0 .. 999_999_999</span></tt>.
 
 </dd>
 <dt id="yearday"><a name="yearday,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">yearday</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">YeardayRange</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the day of the year in the range <tt class="docutils literal"><span class="pre">0 .. 365</span></tt>.
 
 </dd>
 <dt id="weekday"><a name="weekday,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">weekday</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">WeekDay</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-
+Returns the day of the week as an enum.
 
 </dd>
 <dt id="<"><a name="<,SysTime,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`&lt;`</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1494,7 +1496,15 @@ Returns the timezone offset in seconds west of UTC.
 </dd>
 <dt id="=="><a name="==,SysTime,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`==`</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+Returns true if <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt> represent the same point in time. Note that the timezone doesn't need to match!
+<p><strong class="examples_text">Examples:</strong></p>
+<pre class="listing"><span class="Keyword">import</span>
+  <span class="Identifier">times</span>
 
+<span class="Keyword">let</span> <span class="Identifier">a</span> <span class="Other">=</span> <span class="Identifier">sysnow</span><span class="Other">(</span><span class="Other">)</span>
+<span class="Keyword">let</span> <span class="Identifier">b</span> <span class="Other">=</span> <span class="Identifier">a</span><span class="Other">.</span><span class="Identifier">inZone</span><span class="Other">(</span><span class="Identifier">utc</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span>
+<span class="Identifier">doAssert</span> <span class="Identifier">a</span> <span class="Operator">==</span> <span class="Identifier">a</span>
+<span class="Identifier">doAssert</span> <span class="Identifier">a</span> <span class="Operator">==</span> <span class="Identifier">b</span></pre>
 
 </dd>
 <dt id="-"><a name="-,SysTime,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`-`</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Duration</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1555,7 +1565,7 @@ Returns the timezone offset in seconds west of UTC.
 </dd>
 <dt id="$"><a name="$,SysTime"></a><pre><span class="Keyword">proc</span> <span class="Identifier">`$`</span><span class="Other">(</span><span class="Identifier">stime</span><span class="Other">:</span> <span class="Identifier">SysTime</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
-Stringification of a <tt class="docutils literal"><span class="pre">SysTime</span></tt>. Uses the same format as <tt class="docutils literal"><span class="pre">DateTime</span></tt>.
+Stringification of a <tt class="docutils literal"><span class="pre">SysTime</span></tt>. Uses the same format as <tt class="docutils literal"><span class="pre">times.$</span></tt> for <tt class="docutils literal"><span class="pre">times.DateTime</span></tt>.
 
 </dd>
 
@@ -1568,7 +1578,7 @@ Stringification of a <tt class="docutils literal"><span class="pre">SysTime</spa
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2018-08-01 16:14:24 UTC</small>
+        <small>Made with Nim. Generated: 2018-08-24 15:29:56 UTC</small>
       </div>
     </div>
   </div>

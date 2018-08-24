@@ -12,36 +12,36 @@ proc timezone*(stime: SysTime): Timezone =
 
 # Copied from times.nim
 proc toEpochDay(monthday: MonthdayRange, month: Month, year: int): int64 =
-  ## Get the epoch day from a year/month/day date.
-  ## The epoch day is the number of days since 1970/01/01 (it might be negative).
-  # Based on http://howardhinnant.github.io/date_algorithms.html
-  var (y, m, d) = (year, ord(month), monthday.int)
-  if m <= 2:
-    y.dec
+    ## Get the epoch day from a year/month/day date.
+    ## The epoch day is the number of days since 1970/01/01 (it might be negative).
+    # Based on http://howardhinnant.github.io/date_algorithms.html
+    var (y, m, d) = (year, ord(month), monthday.int)
+    if m <= 2:
+        y.dec
 
-  let era = (if y >= 0: y else: y-399) div 400
-  let yoe = y - era * 400
-  let doy = (153 * (m + (if m > 2: -3 else: 9)) + 2) div 5 + d-1
-  let doe = yoe * 365 + yoe div 4 - yoe div 100 + doy
-  return era * 146097 + doe - 719468
+    let era = (if y >= 0: y else: y-399) div 400
+    let yoe = y - era * 400
+    let doy = (153 * (m + (if m > 2: -3 else: 9)) + 2) div 5 + d-1
+    let doe = yoe * 365 + yoe div 4 - yoe div 100 + doy
+    return era * 146097 + doe - 719468
 
 # Copied from times.nim
 proc fromEpochDay(epochday: int64):
-    tuple[monthday: MonthdayRange, month: Month, year: int] =
-  ## Get the year/month/day date from a epoch day.
-  ## The epoch day is the number of days since 1970/01/01 (it might be negative).
-  # Based on http://howardhinnant.github.io/date_algorithms.html
-  var z = epochday
-  z.inc 719468
-  let era = (if z >= 0: z else: z - 146096) div 146097
-  let doe = z - era * 146097
-  let yoe = (doe - doe div 1460 + doe div 36524 - doe div 146096) div 365
-  let y = yoe + era * 400;
-  let doy = doe - (365 * yoe + yoe div 4 - yoe div 100)
-  let mp = (5 * doy + 2) div 153
-  let d = doy - (153 * mp + 2) div 5 + 1
-  let m = mp + (if mp < 10: 3 else: -9)
-  return (d.MonthdayRange, m.Month, (y + ord(m <= 2)).int)
+        tuple[monthday: MonthdayRange, month: Month, year: int] =
+    ## Get the year/month/day date from a epoch day.
+    ## The epoch day is the number of days since 1970/01/01 (it might be negative).
+    # Based on http://howardhinnant.github.io/date_algorithms.html
+    var z = epochday
+    z.inc 719468
+    let era = (if z >= 0: z else: z - 146096) div 146097
+    let doe = z - era * 146097
+    let yoe = (doe - doe div 1460 + doe div 36524 - doe div 146096) div 365
+    let y = yoe + era * 400;
+    let doy = doe - (365 * yoe + yoe div 4 - yoe div 100)
+    let mp = (5 * doy + 2) div 153
+    let d = doy - (153 * mp + 2) div 5 + 1
+    let m = mp + (if mp < 10: 3 else: -9)
+    return (d.MonthdayRange, m.Month, (y + ord(m <= 2)).int)
 
 # Copied from times.nim
 proc toAdjTime(dt: DateTime): Time =
@@ -54,18 +54,18 @@ proc toAdjTime(dt: DateTime): Time =
 
 # Copied from times.nim
 proc isStaticInterval(interval: TimeInterval): bool =
-  interval.years == 0 and interval.months == 0 and
-    interval.days == 0 and interval.weeks == 0
+    interval.years == 0 and interval.months == 0 and
+        interval.days == 0 and interval.weeks == 0
 
 # Copied from times.nim
 proc evaluateStaticInterval(interval: TimeInterval): Duration =
-  assert interval.isStaticInterval
-  initDuration(nanoseconds = interval.nanoseconds,
-    microseconds = interval.microseconds,
-    milliseconds = interval.milliseconds,
-    seconds = interval.seconds,
-    minutes = interval.minutes,
-    hours = interval.hours)
+    assert interval.isStaticInterval
+    initDuration(nanoseconds = interval.nanoseconds,
+        microseconds = interval.microseconds,
+        milliseconds = interval.milliseconds,
+        seconds = interval.seconds,
+        minutes = interval.minutes,
+        hours = interval.hours)
 
 # Copied from times.nim (but with different signature)
 proc getDayOfWeek(unixTime: int64): WeekDay =
@@ -107,16 +107,16 @@ proc inZone*(stime: SysTime, zone: Timezone): SysTime =
 proc toTime*(stime: SysTime): Time =
     ## Convert ``SysTime`` to ``Time``.
     ##
-    ## Note that unlike ``DateTime``, ``SysTime`` is represented
+    ## Note that unlike ``times.DateTime``, ``SysTime`` is represented
     ## internally as a ``Time`` so this proc is just a field access.
     stime.time
 
 proc toDateTime*(stime: SysTime): DateTime =
-    ## Convert ``SysTime`` to ``DateTime``.
+    ## Convert a ``SysTime`` to a ``times.DateTime``.
     stime.time.inZone(stime.timezone)
 
 proc toSysTime*(dt: DateTime): SysTime =
-    ## Convert ``DateTime`` to ``SysTime``.
+    ## Convert a ``times.DateTime`` to a ``SysTime``.
     SysTime(time: toTime(dt), timezone: dt.timezone)
 
 proc sysnow*(): SysTime =
@@ -195,6 +195,7 @@ proc `==`*(a, b: SysTime): bool =
     ## Returns true if ``a`` and ``b`` represent the same point in time.
     ## Note that the timezone doesn't need to match!
     runnableExamples:
+        import times
         let a = sysnow()
         let b = a.inZone(utc())
         doAssert a == a
@@ -246,5 +247,5 @@ proc format*(stime: SysTime, f: static[string]): string =
 
 proc `$`*(stime: SysTime): string =
     ## Stringification of a ``SysTime``.
-    ## Uses the same format as ``DateTime``.
+    ## Uses the same format as ``times.$`` for ``times.DateTime``.
     $toDateTime(stime)
