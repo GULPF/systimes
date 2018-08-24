@@ -26,6 +26,24 @@ proc toEpochDay(monthday: MonthdayRange, month: Month, year: int): int64 =
   return era * 146097 + doe - 719468
 
 # Copied from times.nim
+proc fromEpochDay(epochday: int64):
+    tuple[monthday: MonthdayRange, month: Month, year: int] =
+  ## Get the year/month/day date from a epoch day.
+  ## The epoch day is the number of days since 1970/01/01 (it might be negative).
+  # Based on http://howardhinnant.github.io/date_algorithms.html
+  var z = epochday
+  z.inc 719468
+  let era = (if z >= 0: z else: z - 146096) div 146097
+  let doe = z - era * 146097
+  let yoe = (doe - doe div 1460 + doe div 36524 - doe div 146096) div 365
+  let y = yoe + era * 400;
+  let doy = doe - (365 * yoe + yoe div 4 - yoe div 100)
+  let mp = (5 * doy + 2) div 153
+  let d = doy - (153 * mp + 2) div 5 + 1
+  let m = mp + (if mp < 10: 3 else: -9)
+  return (d.MonthdayRange, m.Month, (y + ord(m <= 2)).int)
+
+# Copied from times.nim
 proc toAdjTime(dt: DateTime): Time =
     let epochDay = toEpochday(dt.monthday, dt.month, dt.year)
     var seconds = convert(Days, Seconds, epochDay)
@@ -121,10 +139,20 @@ proc utcOffset*(stime: Systime): int =
     ## Returns the timezone offset in seconds west of UTC.
     stime.timezone.zonedTimeFromTime(stime.time).utcOffset
 
-# TODO: Optimize
-proc year*(stime: SysTime): int               = toDateTime(stime).year
-proc month*(stime: SysTime): Month            = toDateTime(stime).month
-proc monthday*(stime: SysTime): MonthdayRange = toDateTime(stime).monthday
+template getDate(stime: SysTime):
+        tuple[monthday: MonthdayRange, month: Month, year: int] =
+    let unix = toUnix(stime.time) + stime.utcOffset
+    let epochday = floorDiv(unix, convert(Days, Seconds, 1))
+    fromEpochDay(epochday)
+
+proc year*(stime: SysTime): int =
+    getDate(stime).year
+
+proc month*(stime: SysTime): Month =
+    getDate(stime).month
+
+proc monthday*(stime: SysTime): MonthdayRange =
+    getDate(stime).monthday
 
 proc hour*(stime: SysTime): HourRange =
     ## Returns the hour of the day in the range ``0 .. 23``.
@@ -150,8 +178,8 @@ proc nanosecond*(stime: SysTime): NanosecondRange =
 
 proc yearday*(stime: SysTime): YeardayRange =
     ## Returns the day of the year in the range ``0 .. 365``.
-    # TODO: optimize
-    toDateTime(stime).yearday
+    let date = getDate(stime)
+    getDayOfYear(date.monthday, date.month, date.year)
 
 proc weekday*(stime: SysTime): Weekday =
     ## Returns the day of the week as an enum.
